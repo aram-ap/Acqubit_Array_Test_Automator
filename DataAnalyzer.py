@@ -2,7 +2,8 @@ import tkinter as tk
 import re
 import pandas as pd
 from tkinter import filedialog as fd
-
+import numpy as np
+import matplotlib.pyplot as plt
 
 def split(delimiters, string, maxsplit=0):
     import re
@@ -31,12 +32,20 @@ def testType(path: str):
 
     return dict
 
-def getCsvFile(path: str):
-    csvFile = pd.read_csv(path, sep=',', header=None)
-    return csvFile
+def getData(path: str):
+    file = np.loadtxt(path, delimiter=',')
+    return file
 
-def normalize(csvFile):
-    pass
+def normalize(df):
+    return df / np.linalg.norm(df)
+
+def plot(data):
+    plt.style.use('_mpl-gallery-nogrid')
+
+    X, Y = np.meshgrid(np.linspace(0,31), np.linspace(0,31))
+    fig, ax = plt.subplots()
+    ax.imshow(data)
+    plt.show()
 
 def callback():
     name = fd.askopenfilename();
@@ -48,8 +57,10 @@ def callback():
     for key in dict.keys():
         print(key, ": ", dict[key])
 
-    file = getCsvFile(name)
+    file = getData(name)
+    file = normalize(file)
     print(file)
+    plot(file)
 
 
 
